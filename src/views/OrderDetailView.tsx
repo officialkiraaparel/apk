@@ -43,6 +43,7 @@ import { DetailOrderSheet } from '../components/orders/DetailOrderSheet';
 import { ManualEditInvoiceModal } from '../components/modals/ManualEditInvoiceModal';
 import { ManualEditSPKModal } from '../components/modals/ManualEditSPKModal';
 import { UploadToDriveModal } from '../components/modals/UploadToDriveModal';
+import { OrderTrackingQR } from '../components/common/OrderTrackingQR';
 import {
   canAdvanceProduction,
   canManualEditInvoice,
@@ -1415,6 +1416,15 @@ export const OrderDetailView: React.FC<OrderDetailViewProps> = ({ orderId, onNav
                 </p>
               </div>
             )}
+            {/* QR Code Tracking Card for Shipping / Dispatch */}
+            <div className="pt-2">
+              <OrderTrackingQR
+                order={order}
+                size={100}
+                variant="standard"
+                showActions={true}
+              />
+            </div>
           </div>
         )}
       </div>

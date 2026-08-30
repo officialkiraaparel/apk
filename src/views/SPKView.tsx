@@ -24,6 +24,7 @@ import { DetailOrderSheet } from '../components/orders/DetailOrderSheet';
 import { ManualEditSPKModal } from '../components/modals/ManualEditSPKModal';
 import { UploadToDriveModal } from '../components/modals/UploadToDriveModal';
 import { KIRA_LOGO_URL } from '../utils/constants';
+import { OrderTrackingQR } from '../components/common/OrderTrackingQR';
 
 interface SPKViewProps {
   orderId: string;
@@ -153,7 +154,7 @@ export const SPKView: React.FC<SPKViewProps> = ({ orderId, onNavigate }) => {
         /* Official SPK Document Canvas */
         <div className="print-document-canvas bg-white p-8 sm:p-12 rounded-2xl border-2 border-slate-300 shadow-lg max-w-4xl mx-auto text-slate-900 print:border-0 print:shadow-none print:p-0 print:max-w-none print:overflow-visible">
         {/* SPK Header */}
-        <div className="print-avoid-break flex items-start justify-between border-b-2 border-slate-900 pb-5">
+        <div className="print-avoid-break flex items-start justify-between border-b-2 border-slate-900 pb-5 gap-4">
           <div className="flex items-center gap-3.5">
             <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200 p-1 flex items-center justify-center shadow-xs shrink-0 overflow-hidden">
               <img
@@ -177,12 +178,23 @@ export const SPKView: React.FC<SPKViewProps> = ({ orderId, onNavigate }) => {
             </div>
           </div>
 
-          <div className="text-right shrink-0">
-            <span className="font-mono text-sm font-black text-indigo-900 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200 inline-block">
-              {order.spkNumber}
-            </span>
-            <p className="text-xs text-slate-600 font-semibold mt-1">Order Ref: {order.orderNumber}</p>
-            <p className="text-[11px] text-slate-500">Tgl Diterbitkan: {formatDateID(order.orderDate)}</p>
+          <div className="flex items-center gap-3 text-right shrink-0">
+            <div className="hidden sm:block text-left">
+              <OrderTrackingQR
+                order={order}
+                size={70}
+                variant="stamp"
+                showActions={false}
+                className="p-1.5 border-slate-300"
+              />
+            </div>
+            <div>
+              <span className="font-mono text-sm font-black text-indigo-900 bg-indigo-50 px-2.5 py-1 rounded-md border border-indigo-200 inline-block">
+                {order.spkNumber}
+              </span>
+              <p className="text-xs text-slate-600 font-semibold mt-1">Order Ref: {order.orderNumber}</p>
+              <p className="text-[11px] text-slate-500">Tgl Diterbitkan: {formatDateID(order.orderDate)}</p>
+            </div>
           </div>
         </div>
 
@@ -329,6 +341,25 @@ export const SPKView: React.FC<SPKViewProps> = ({ orderId, onNavigate }) => {
           <span className="font-bold text-amber-900 block mb-1">Catatan Khusus Workshop & QC:</span>
           <p className="text-amber-800">{order.productionNotes || 'Jahit rapi, pastikan warna sublim tajam dan akurat.'}</p>
           {order.notes && <p className="text-amber-700 mt-1 italic">Catatan Order: {order.notes}</p>}
+        </div>
+
+        {/* 4. QR Code Tracking Section */}
+        <div className="print-avoid-break mt-6 space-y-3">
+          <div className="border-b border-slate-200 pb-1 flex items-center justify-between">
+            <h3 className="text-xs font-black uppercase tracking-wider text-slate-900">
+              4. QR CODE TRACKING & VERIFIKASI PESANAN KLIEN
+            </h3>
+            <span className="text-[10px] font-bold text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded border border-indigo-200">
+              Auto-Generated QR
+            </span>
+          </div>
+
+          <OrderTrackingQR
+            order={order}
+            size={110}
+            variant="standard"
+            showActions={true}
+          />
         </div>
 
         {/* Official Signatures */}

@@ -108,3 +108,12 @@ export function generateWhatsAppUrl(order: Order, customType?: 'progress' | 'des
 
   return `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
 }
+
+export function getOrderTrackingUrl(orderNumber: string): string {
+  if (typeof window !== 'undefined' && window.location) {
+    const origin = window.location.origin;
+    const pathname = window.location.pathname;
+    return `${origin}${pathname}#track-${encodeURIComponent(orderNumber)}`;
+  }
+  return `https://kiraapparel.com/#track-${encodeURIComponent(orderNumber)}`;
+}

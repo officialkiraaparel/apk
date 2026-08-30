@@ -24,10 +24,8 @@ import { GoogleSheetsDatabaseView } from './views/GoogleSheetsDatabaseView';
 
 const MainLayout: React.FC = () => {
   const { currentUser, isAuth, orders } = useApp();
-  // Default tab: for client or unauth, default is 'landing'; for staff, 'dashboard'
-  const [activeTab, setActiveTab] = useState<string>(() => {
-    return currentUser?.role === 'client' ? 'landing' : 'dashboard';
-  });
+  // Default view is always the public Landing Page
+  const [activeTab, setActiveTab] = useState<string>('landing');
   const [mobileMenuOpen, setMobileMenuOpen] = useState<boolean>(false);
 
   // Sync role change with default landing/dashboard view

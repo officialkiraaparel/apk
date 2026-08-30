@@ -25,9 +25,56 @@ import { formatDateID, formatDateTimeID, formatRupiah, generateWhatsAppUrl } fro
 
 export const ClientTrackingView: React.FC<{ onNavigate: (tab: string) => void }> = ({ onNavigate }) => {
   const { orders, settings } = useApp();
-  const [searchInput, setSearchInput] = useState('KA-20260828-001');
-  const [searchedOrder, setSearchedOrder] = useState(() => orders.find(o => o.orderNumber === 'KA-20260828-001') || orders[0]);
+
+  const getInitialTrackingQuery = () => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '');
+      if (hash.startsWith('track-')) {
+        return decodeURIComponent(hash.replace('track-', ''));
+      }
+      const params = new URLSearchParams(window.location.search);
+      const trackParam = params.get('track');
+      if (trackParam) return decodeURIComponent(trackParam);
+    }
+    return orders[0]?.orderNumber || 'KA-20260828-001';
+  };
+
+  const [searchInput, setSearchInput] = useState(getInitialTrackingQuery);
+  const [searchedOrder, setSearchedOrder] = useState(() => {
+    const q = getInitialTrackingQuery().trim().toLowerCase();
+    return (
+      orders.find(
+        o =>
+          o.orderNumber.toLowerCase() === q ||
+          o.id.toLowerCase() === q ||
+          o.clientPhone.includes(q) ||
+          o.clientName.toLowerCase().includes(q)
+      ) || orders[0]
+    );
+  });
   const [modalImage, setModalImage] = useState<{ url: string; title: string; subtitle?: string } | null>(null);
+
+  // Listen to hash / URL changes
+  React.useEffect(() => {
+    const handleUrlChange = () => {
+      const q = getInitialTrackingQuery().trim().toLowerCase();
+      if (q) {
+        setSearchInput(getInitialTrackingQuery());
+        const found = orders.find(
+          o =>
+            o.orderNumber.toLowerCase() === q ||
+            o.id.toLowerCase() === q ||
+            o.clientPhone.includes(q) ||
+            o.clientName.toLowerCase().includes(q)
+        );
+        if (found) {
+          setSearchedOrder(found);
+        }
+      }
+    };
+    window.addEventListener('hashchange', handleUrlChange);
+    return () => window.removeEventListener('hashchange', handleUrlChange);
+  }, [orders]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();

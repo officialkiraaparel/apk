@@ -84,6 +84,16 @@ export const OFFICIAL_SUPERADMIN_USER: User = {
   avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
 };
 
+export const GUEST_CLIENT_USER: User = {
+  id: 'usr_guest',
+  name: 'Tamu Pengunjung (Klien)',
+  email: 'tamu@kiraaparel.com',
+  role: 'client',
+  status: 'active',
+  phone: '',
+  notes: 'Pengunjung Publik Website KIRA APPAREL',
+};
+
 export const MOCK_USERS: User[] = [
   OFFICIAL_SUPERADMIN_USER,
 ];

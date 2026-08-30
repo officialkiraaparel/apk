@@ -16,6 +16,7 @@ import {
 } from '../types';
 import {
   DEFAULT_COMPANY_SETTINGS,
+  GUEST_CLIENT_USER,
   INITIAL_PRODUCTION_STAGES,
   KIRA_LOGO_URL,
   MOCK_USERS,
@@ -116,7 +117,7 @@ const STORAGE_KEYS = {
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAuth, setIsAuth] = useState<boolean>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.AUTH);
-    return saved !== null ? JSON.parse(saved) : true;
+    return saved !== null ? JSON.parse(saved) : false;
   });
 
   const [users, setUsers] = useState<User[]>(() => {
@@ -156,14 +157,14 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           parsed.id.startsWith('usr_produksi') ||
           parsed.id.startsWith('usr_client')
         ) {
-          return OFFICIAL_SUPERADMIN_USER;
+          return GUEST_CLIENT_USER;
         }
         return parsed;
       } catch (e) {
-        return OFFICIAL_SUPERADMIN_USER;
+        return GUEST_CLIENT_USER;
       }
     }
-    return OFFICIAL_SUPERADMIN_USER;
+    return GUEST_CLIENT_USER;
   });
 
   const [clients, setClients] = useState<Client[]>(() => {

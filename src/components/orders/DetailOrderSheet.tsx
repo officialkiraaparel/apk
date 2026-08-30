@@ -13,6 +13,7 @@ import { useApp } from '../../context/AppContext';
 import { canManualEditSPK } from '../../utils/security';
 import { ManualEditSPKModal } from '../modals/ManualEditSPKModal';
 import { KIRA_LOGO_URL } from '../../utils/constants';
+import { OrderTrackingQR } from '../common/OrderTrackingQR';
 
 interface DetailOrderSheetProps {
   order: Order;
@@ -475,21 +476,34 @@ export const DetailOrderSheet: React.FC<DetailOrderSheetProps> = ({
           </table>
         </div>
 
-        {/* 4. WORKSHOP NOTES BOX (CATATAN) */}
-        <div className="border-x-2 border-b-2 border-slate-900 p-4 min-h-[90px] bg-white">
-          <span className="text-xs font-bold text-slate-800 block mb-1">Catatan :</span>
-          <div className="text-sm font-bold text-slate-900 leading-relaxed font-sans space-y-0.5">
-            {order.stitchingNotes ? (
-              order.stitchingNotes.split('\n').map((line, idx) => (
-                <p key={idx}>{line.startsWith('-') ? line : `- ${line}`}</p>
-              ))
-            ) : (
-              <>
-                <p>- KAM 3 JARUM</p>
-                <p>- KERAH {order.collarModel.toUpperCase().replace('-', ' ')}</p>
-                {order.notes && <p>- {order.notes}</p>}
-              </>
-            )}
+        {/* 4. WORKSHOP NOTES BOX (CATATAN) & CLIENT TRACKING QR CODE */}
+        <div className="border-x-2 border-b-2 border-slate-900 p-4 min-h-[90px] bg-white grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+          <div className="md:col-span-8">
+            <span className="text-xs font-bold text-slate-800 block mb-1">Catatan :</span>
+            <div className="text-sm font-bold text-slate-900 leading-relaxed font-sans space-y-0.5">
+              {order.stitchingNotes ? (
+                order.stitchingNotes.split('\n').map((line, idx) => (
+                  <p key={idx}>{line.startsWith('-') ? line : `- ${line}`}</p>
+                ))
+              ) : (
+                <>
+                  <p>- KAM 3 JARUM</p>
+                  <p>- KERAH {order.collarModel.toUpperCase().replace('-', ' ')}</p>
+                  {order.notes && <p>- {order.notes}</p>}
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* QR Code Tracking Stamp for Client & Workshop */}
+          <div className="md:col-span-4 border-t md:border-t-0 md:border-l-2 border-slate-900 pt-3 md:pt-0 md:pl-4">
+            <OrderTrackingQR
+              order={order}
+              size={84}
+              variant="compact"
+              showActions={true}
+              className="bg-slate-50 border-slate-300"
+            />
           </div>
         </div>
       </div>

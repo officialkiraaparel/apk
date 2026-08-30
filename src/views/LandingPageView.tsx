@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AlertCircle,
   ArrowRight,
@@ -319,18 +319,46 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
   };
 
   // Handle Live Tracking Search
-  const handleTrackingSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    const query = trackingInput.trim().toLowerCase();
+  const handleTrackingSearch = (e?: React.FormEvent, customQuery?: string) => {
+    if (e) e.preventDefault();
+    const query = (customQuery || trackingInput).trim().toLowerCase();
+    if (!query) return;
     const found = orders.find(
       o =>
         o.orderNumber.toLowerCase().includes(query) ||
+        o.id.toLowerCase() === query ||
         o.clientPhone.includes(query) ||
         o.clientName.toLowerCase().includes(query) ||
         o.clientCompany.toLowerCase().includes(query)
     );
     setTrackingResult(found || null);
   };
+
+  // Auto-track if URL contains hash (#track-KA-XXXX) or query param (?track=KA-XXXX)
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '');
+      let targetOrderNo = '';
+      if (hash.startsWith('track-')) {
+        targetOrderNo = decodeURIComponent(hash.replace('track-', ''));
+      } else {
+        const params = new URLSearchParams(window.location.search);
+        const t = params.get('track');
+        if (t) targetOrderNo = decodeURIComponent(t);
+      }
+
+      if (targetOrderNo) {
+        setTrackingInput(targetOrderNo);
+        handleTrackingSearch(undefined, targetOrderNo);
+        setTimeout(() => {
+          const trackElem = document.getElementById('tracking-section') || document.getElementById('lacak-pesanan');
+          if (trackElem) {
+            trackElem.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 300);
+      }
+    }
+  }, [orders]);
 
   // WhatsApp Direct Order Action
   const handleDirectWhatsApp = (customText?: string) => {
@@ -1595,6 +1623,30 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* ========================================================================= */}
+      {/* 7. MODAL LOGIN PORTAL MARKETING / ADMIN */}
+      {/* ========================================================================= */}
+      {showLoginModal && (
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="relative w-full max-w-md">
+            <button
+              type="button"
+              onClick={() => setShowLoginModal(false)}
+              className="absolute -top-12 right-0 p-2 text-slate-300 hover:text-white bg-white/10 hover:bg-white/20 rounded-full transition-all"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <LoginView
+              onLoginSuccess={() => {
+                setShowLoginModal(false);
+                onNavigateToApp('dashboard');
+              }}
+              onCancel={() => setShowLoginModal(false)}
+            />
           </div>
         </div>
       )}
