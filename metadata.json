@@ -1,0 +1,6 @@
+{
+  "name": "Kira Aparel",
+  "description": "Sistem Manajemen Produksi, SPK, Invoice & Tracking Pesanan Konveksi & Jersey Kira Apparel.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

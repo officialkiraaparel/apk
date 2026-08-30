@@ -1,0 +1,216 @@
+@import "tailwindcss";
+
+@layer base {
+  * {
+    border-color: var(--color-slate-200, #e2e8f0);
+  }
+}
+
+@keyframes pulse-subtle {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.85; transform: scale(1.02); }
+}
+
+.animate-pulse-subtle {
+  animation: pulse-subtle 2s infinite ease-in-out;
+}
+
+/* ========================================================= */
+/* PRODUCTION-GRADE PRINT STYLES FOR PDF, INVOICE & SPK     */
+/* ========================================================= */
+
+@page {
+  size: A4 portrait;
+  margin: 10mm 12mm 12mm 12mm;
+}
+
+@media print {
+  /* Force exact color reproduction and high-fidelity printing */
+  *,
+  *::before,
+  *::after {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    color-adjust: exact !important;
+    text-shadow: none !important;
+  }
+
+  html,
+  body {
+    background: #ffffff !important;
+    color: #0f172a !important;
+    font-size: 11pt !important;
+    line-height: 1.4 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    overflow: visible !important;
+  }
+
+  /* Unclip all scrollable/overflowing parent containers to prevent multi-page cutoff */
+  #root,
+  #app-root,
+  main,
+  .flex-1,
+  .overflow-hidden,
+  .overflow-y-auto,
+  .overflow-x-auto,
+  .max-w-7xl,
+  .max-w-4xl {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: 0 !important;
+    max-height: none !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    position: static !important;
+    float: none !important;
+    box-shadow: none !important;
+    background: #ffffff !important;
+  }
+
+  /* Hide screen-only interactive UI elements */
+  .no-print,
+  header,
+  aside,
+  nav,
+  button:not(.allow-print),
+  .mobile-nav,
+  #mobile-menu-toggle-btn,
+  #mobile-bottom-nav,
+  #app-main-sidebar,
+  .modal-backdrop,
+  .toast-container {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .print-flex {
+    display: flex !important;
+  }
+
+  /* Document Canvas Print Format */
+  .print-document-canvas,
+  #invoice-printable-view > div:not(.no-print),
+  #spk-printable-view > div:not(.no-print) {
+    background: #ffffff !important;
+    border: none !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  /* Headings inside print documents */
+  h1, h2, h3, h4, h5, h6 {
+    color: #0f172a !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+
+  /* Table formatting: crisp borders, repeated headers, zero cutoff */
+  table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    page-break-inside: auto !important;
+    break-inside: auto !important;
+    font-size: 9.5pt !important;
+  }
+
+  thead {
+    display: table-header-group !important;
+  }
+
+  tfoot {
+    display: table-footer-group !important;
+  }
+
+  tr {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  th {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+    border: 1px solid #cbd5e1 !important;
+    padding: 6px 8px !important;
+    text-align: inherit;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  td {
+    border: 1px solid #e2e8f0 !important;
+    padding: 6px 8px !important;
+    vertical-align: middle !important;
+    color: #1e293b !important;
+  }
+
+  /* Prevent page breaks inside essential modular sections */
+  .print-avoid-break,
+  .break-inside-avoid,
+  .print-section,
+  .signature-block,
+  .pricing-totals-box,
+  .bank-info-box,
+  .image-reference-box {
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
+  /* Preserving company logo & branding backgrounds */
+  .brand-logo-badge {
+    background-color: #4f46e5 !important;
+    color: #ffffff !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border-radius: 12px !important;
+  }
+
+  /* High fidelity for reference images and QR code */
+  img {
+    max-width: 100% !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    object-fit: contain !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Watermark stamp rendering without breaking layout */
+  .watermark-stamp {
+    position: absolute !important;
+    opacity: 0.22 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Status Badges */
+  .status-badge {
+    border-width: 1px !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  .page-break {
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+}
+
