@@ -1,7 +1,9 @@
 import { Client, Order, ProductionStageProgress } from '../types';
 import { INITIAL_PRODUCTION_STAGES } from './constants';
 
-export const INITIAL_CLIENTS: Client[] = [
+export const INITIAL_CLIENTS: Client[] = [];
+
+export const DEMO_CLIENTS: Client[] = [
   {
     id: 'clt_0',
     clientId: 'CLT-000',
@@ -113,7 +115,9 @@ const SAMPLE_IMAGE_2_TEAL = 'https://images.unsplash.com/photo-1583743814966-893
 const SAMPLE_IMAGE_1_BATIK = 'https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800&auto=format&fit=crop&q=80';
 const SAMPLE_IMAGE_2_BATIK = 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?w=800&auto=format&fit=crop&q=80';
 
-export const INITIAL_ORDERS: Order[] = [
+export const INITIAL_ORDERS: Order[] = [];
+
+export const DEMO_ORDERS: Order[] = [
   {
     id: 'ord_0',
     orderNumber: 'KA-20260808-001',

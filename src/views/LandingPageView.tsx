@@ -123,8 +123,8 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
   const [calcLongSleeveQty, setCalcLongSleeveQty] = useState<number>(0);
 
   // Tracking Search State
-  const [trackingInput, setTrackingInput] = useState('KA-20260828-001');
-  const [trackingResult, setTrackingResult] = useState<any>(() => orders[0] || null);
+  const [trackingInput, setTrackingInput] = useState('');
+  const [trackingResult, setTrackingResult] = useState<any>(null);
 
   // Login Modal State
   const [showLoginModal, setShowLoginModal] = useState(false);
@@ -1511,9 +1511,13 @@ export const LandingPageView: React.FC<LandingPageViewProps> = ({
                     </div>
                   </div>
                 </div>
+              ) : trackingInput.trim() ? (
+                <div className="p-6 text-center text-slate-400 text-xs bg-slate-950 rounded-2xl border border-slate-800">
+                  Data pesanan tidak ditemukan dengan kata kunci &quot;{trackingInput}&quot;. Pastikan Nomor Order atau No. WhatsApp Anda sudah benar.
+                </div>
               ) : (
                 <div className="p-6 text-center text-slate-400 text-xs bg-slate-950 rounded-2xl border border-slate-800">
-                  Data pesanan tidak ditemukan dengan kata kunci tersebut.
+                  Ketik nomor Order ID atau No. WhatsApp pemesan pada kolom di atas, lalu klik <strong>Lacak</strong>.
                 </div>
               )}
             </div>

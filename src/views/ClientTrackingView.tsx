@@ -36,12 +36,13 @@ export const ClientTrackingView: React.FC<{ onNavigate: (tab: string) => void }>
       const trackParam = params.get('track');
       if (trackParam) return decodeURIComponent(trackParam);
     }
-    return orders[0]?.orderNumber || 'KA-20260828-001';
+    return '';
   };
 
   const [searchInput, setSearchInput] = useState(getInitialTrackingQuery);
-  const [searchedOrder, setSearchedOrder] = useState(() => {
+  const [searchedOrder, setSearchedOrder] = useState<any>(() => {
     const q = getInitialTrackingQuery().trim().toLowerCase();
+    if (!q) return null;
     return (
       orders.find(
         o =>
@@ -49,7 +50,7 @@ export const ClientTrackingView: React.FC<{ onNavigate: (tab: string) => void }>
           o.id.toLowerCase() === q ||
           o.clientPhone.includes(q) ||
           o.clientName.toLowerCase().includes(q)
-      ) || orders[0]
+      ) || null
     );
   });
   const [modalImage, setModalImage] = useState<{ url: string; title: string; subtitle?: string } | null>(null);
@@ -118,21 +119,23 @@ export const ClientTrackingView: React.FC<{ onNavigate: (tab: string) => void }>
         </form>
 
         {/* Quick Demo Chips */}
-        <div className="mt-4 flex items-center justify-center gap-2 flex-wrap text-xs">
-          <span className="text-[11px] text-slate-400">Coba Order Demo:</span>
-          {orders.slice(0, 3).map(o => (
-            <button
-              key={o.id}
-              onClick={() => {
-                setSearchInput(o.orderNumber);
-                setSearchedOrder(o);
-              }}
-              className="px-2.5 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-lg text-[11px] font-mono text-indigo-300 border border-slate-700"
-            >
-              {o.orderNumber}
-            </button>
-          ))}
-        </div>
+        {orders.length > 0 && (
+          <div className="mt-4 flex items-center justify-center gap-2 flex-wrap text-xs">
+            <span className="text-[11px] text-slate-400">Pilih Pesanan:</span>
+            {orders.slice(0, 3).map(o => (
+              <button
+                key={o.id}
+                onClick={() => {
+                  setSearchInput(o.orderNumber);
+                  setSearchedOrder(o);
+                }}
+                className="px-2.5 py-1 bg-slate-800/80 hover:bg-indigo-900/60 rounded-lg text-[11px] font-mono text-indigo-300 border border-slate-700"
+              >
+                {o.orderNumber}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Tracking Result */}
@@ -332,12 +335,20 @@ export const ClientTrackingView: React.FC<{ onNavigate: (tab: string) => void }>
             </div>
           </div>
         </div>
-      ) : (
+      ) : searchInput.trim() ? (
         <div className="bg-white p-12 rounded-3xl border border-slate-200 text-center text-slate-500 space-y-2">
           <AlertCircle className="w-10 h-10 text-slate-400 mx-auto" />
           <h3 className="text-sm font-bold text-slate-800">Pesanan Tidak Ditemukan</h3>
           <p className="text-xs text-slate-400">
-            Periksa kembali nomor Order ID atau nomor WhatsApp yang Anda masukkan.
+            Tidak ditemukan pesanan dengan kata kunci &quot;{searchInput}&quot;. Periksa kembali nomor Order ID atau nomor WhatsApp Anda.
+          </p>
+        </div>
+      ) : (
+        <div className="bg-white p-12 rounded-3xl border border-slate-200 text-center text-slate-500 space-y-2">
+          <Sparkles className="w-10 h-10 text-indigo-400 mx-auto" />
+          <h3 className="text-sm font-bold text-slate-800">Pelacakan Pesanan Real-time</h3>
+          <p className="text-xs text-slate-400">
+            Ketik nomor Order ID atau nomor WhatsApp Anda pada kotak pencarian di atas untuk melacak progres produksi.
           </p>
         </div>
       )}

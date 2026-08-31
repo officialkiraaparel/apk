@@ -28,7 +28,7 @@ import {
   generateOrderNumber,
   generateSpkNumber,
 } from '../utils/formatters';
-import { INITIAL_CLIENTS, INITIAL_ORDERS } from '../utils/mockData';
+import { DEMO_CLIENTS, DEMO_ORDERS, INITIAL_CLIENTS, INITIAL_ORDERS } from '../utils/mockData';
 import { appendOrderToGoogleSheets } from '../services/googleSheetsService';
 
 interface AppContextType {
@@ -169,12 +169,30 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [clients, setClients] = useState<Client[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.CLIENTS);
-    return saved ? JSON.parse(saved) : INITIAL_CLIENTS;
+    if (saved) {
+      try {
+        const parsed: Client[] = JSON.parse(saved);
+        // Exclude dummy sample clients
+        return parsed.filter(c => !['clt_0', 'clt_1', 'clt_2', 'clt_3', 'clt_4'].includes(c.id));
+      } catch (e) {
+        return [];
+      }
+    }
+    return INITIAL_CLIENTS;
   });
 
   const [orders, setOrders] = useState<Order[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.ORDERS);
-    return saved ? JSON.parse(saved) : INITIAL_ORDERS;
+    if (saved) {
+      try {
+        const parsed: Order[] = JSON.parse(saved);
+        // Exclude dummy sample orders
+        return parsed.filter(o => !['ord_0', 'ord_1', 'ord_2', 'ord_3', 'ord_4'].includes(o.id));
+      } catch (e) {
+        return [];
+      }
+    }
+    return INITIAL_ORDERS;
   });
 
   const [settings, setSettings] = useState<CompanySettings>(() => {
@@ -195,28 +213,15 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   const [notifications, setNotifications] = useState<AppNotification[]>(() => {
     const saved = localStorage.getItem(STORAGE_KEYS.NOTIFICATIONS);
-    return saved
-      ? JSON.parse(saved)
-      : [
-          {
-            id: 'notif_1',
-            title: 'Desain Menunggu Persetujuan',
-            message: 'Order KA-20260822-002 (Gowes Bandung) menunggu persetujuan desain dari client.',
-            orderId: 'ord_2',
-            type: 'design',
-            read: false,
-            createdAt: new Date().toISOString(),
-          },
-          {
-            id: 'notif_2',
-            title: 'Progress Jahit Berjalan',
-            message: 'Order KA-20260828-001 (Garuda FC) mencapai 65% progress di workshop.',
-            orderId: 'ord_1',
-            type: 'production',
-            read: false,
-            createdAt: new Date().toISOString(),
-          },
-        ];
+    if (saved) {
+      try {
+        const parsed: AppNotification[] = JSON.parse(saved);
+        return parsed.filter(n => !['notif_1', 'notif_2'].includes(n.id));
+      } catch (e) {
+        return [];
+      }
+    }
+    return [];
   });
 
   // Sync to localStorage
@@ -527,10 +532,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
   };
 
   const loadDemoData = () => {
-    setOrders(INITIAL_ORDERS);
-    setClients(INITIAL_CLIENTS);
+    setOrders(DEMO_ORDERS);
+    setClients(DEMO_CLIENTS);
     setUsers(MOCK_USERS);
-    setCurrentUser(MOCK_USERS[0]);
+    setCurrentUser(OFFICIAL_SUPERADMIN_USER);
     setIsAuth(true);
     const demoNotifs: AppNotification[] = [
       {
@@ -553,10 +558,10 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       },
     ];
     setNotifications(demoNotifs);
-    localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(INITIAL_ORDERS));
-    localStorage.setItem(STORAGE_KEYS.CLIENTS, JSON.stringify(INITIAL_CLIENTS));
+    localStorage.setItem(STORAGE_KEYS.ORDERS, JSON.stringify(DEMO_ORDERS));
+    localStorage.setItem(STORAGE_KEYS.CLIENTS, JSON.stringify(DEMO_CLIENTS));
     localStorage.setItem(STORAGE_KEYS.USERS, JSON.stringify(MOCK_USERS));
-    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(MOCK_USERS[0]));
+    localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(OFFICIAL_SUPERADMIN_USER));
     localStorage.setItem(STORAGE_KEYS.NOTIFICATIONS, JSON.stringify(demoNotifs));
   };
 
